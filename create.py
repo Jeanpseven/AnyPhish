@@ -1,5 +1,5 @@
 import re
-import cookielib
+import http.cookiejar as cookielib
 import mechanize
 from bs4 import BeautifulSoup as bs
 
