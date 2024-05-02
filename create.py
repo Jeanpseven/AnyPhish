@@ -92,8 +92,7 @@ class Create(object):
    if rec:self.html(page,rec-1)
    else:self.exit(page)
 
-  print '[ Fields Found ]\nUsername: {}\nPassword: {}'.\
-  format(self.username,self.password)
+  print('[ Fields Found ]\nUsername: {}\nPassword: {}'.format(self.username, self.password))
 
  def php(self):
   with open('{}'.format(self.loginphp),'w') as phpfile:
