@@ -43,7 +43,7 @@ def main():
  arg.add_argument('url',help='site\'s login page')
  arg = arg.parse_args()
  Phish().clone(arg.url)
- print 'Check: /var/www/html'
+ print('Check: /var/www/html')
 
 if __name__ == '__main__':
  if os.getuid():exit('root access required')
